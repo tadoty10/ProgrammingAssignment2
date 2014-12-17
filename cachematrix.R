@@ -18,77 +18,67 @@
 # Computing the inverse of a square matrix can be done with the solve function in R. For 
 # example, if X is a square invertible matrix, then solve(X) returns its inverse.
 #"
-# Copying some of the lanuage from the example given the following functions 
-# are in the makeCacheMatrix. THe end result is a list containing function.
+#
+# Basically building list containing functions to 
+# pass in the cacheSolve function.
 # 
-# 1. set - set the value of the matrix. indicator <- NULL
-# 2. get the value of the matrix 
-# 3. set the value of inverse of the matrix 
-# 4. get the value of inverse of the matrix 
+# getMatrix - get the value of the matrix passed in
+# setGlobal -  set the value of inverse of the matrix globally
+# getInverted -  get the value of the global inverse of the matrix value
+# 
 makeCacheMatrix <- function(x = matrix()) {
  
-    inv <- NULL 
-    set <- function(y) { 
-        x <<- y 
-        inv <<- NULL 
-    } 
-    get <- function() x 
-    setinverse <- function(inverse) inv <<- inverse 
-    getinverse <- function() inv 
-    list(set=set, get=get, setinverse=setinverse, getinverse=getinverse) 
+    invertedMatrix <- NULL 
+    getMatrix <- function() x 
+    setGlobal <- function(inverted) invertedMatrix <<- inverted 
+    getInverted <- function() invertedMatrix 
+    list(getMatrix=getMatrix, setGlobal=setGlobal, getInverted=getInverted) 
 } 
-# here is an example that the above is modelled after.
-##makeVector <- function(x = numeric()) {
-##        m <- NULL
-##        set <- function(y) {
-##                x <<- y
-##                m <<- NULL
-##        }
-##        get <- function() x
-##        setmean <- function(mean) m <<- mean
-##        getmean <- function() m
-##        list(set = set, get = get,
-##             setmean = setmean,
-##             getmean = getmean)
-##}
-
-
-## Write a short comment describing this function
-
+#
+# 
+# The following function takes in the list of function and either 1: inverts a square matrix 
+# and sets the value global, or 2: returns the previously set global value. There is not 
+# checking but the matrix needs to be "square" i.e. 2x2, 3x3, etc. as per the solve(). 
+# 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
-
- 
-# The following function returns the inverse of the matrix. It first checks if 
-# the inverse has already been computed. If so, it gets the result and skips the 
-# computation. If not, it computes the inverse, sets the value in the cache via 
-# setinverse function. 
-
- 
-# This function assumes that the matrix is always invertible. 
-
-    inv <- x$getinverse() 
-    if(!is.null(inv)) { 
-        message("getting cached data.") 
-        return(inv) 
+    invertedMatrix <- x$getInverted() 
+    if(!is.null(invertedMatrix)) { 
+        print("Already set, getting cache") 
+        return(invertedMatrix) 
     } 
-    data <- x$get() 
-    inv <- solve(data) 
-    x$setinverse(inv) 
-    inv 
+    mtrx <- x$getMatrix() 
+    invertedMatrix <- solve(mtrx) 
+    x$setGlobal(invertedMatrix) 
+    invertedMatrix 
 } 
-
-## 
-##cachemean <- function(x, ...) {
-##        m <- x$getmean()
-##        if(!is.null(m)) {
-##                message("getting cached data")
-##                return(m)
-##        }
-##        data <- x$get()
-##        m <- mean(data, ...)
-##        x$setmean(m)
-##        m
-##}
+###
+###  Testing Results ###
+###
+#> source("cachematrix.R")
+#> w <- matrix(c(1,2,2,1), ncol = 2 , nrow = 2)
+#> w
+#     [,1] [,2]
+#[1,]    1    2
+#[2,]    2    1
+#> ww <- makeCacheMatrix(w)
+#> cacheSolve(ww)
+#           [,1]       [,2]
+#[1,] -0.3333333  0.6666667
+#[2,]  0.6666667 -0.3333333
+#> cacheSolve(ww)
+#[1] "Already set, getting cache"
+#           [,1]       [,2]
+#[1,] -0.3333333  0.6666667
+#[2,]  0.6666667 -0.3333333
+#> w <- matrix(c(1,2,2,1,2,3), ncol = 2 , nrow = 3)
+#> w
+#     [,1] [,2]
+#[1,]    1    1
+#[2,]    2    2
+#[3,]    2    3
+#> ww <- makeCacheMatrix(w)
+#> cacheSolve(ww)
+#Error in solve.default(mtrx) : 'a' (3 x 2) must be square
+#> 
 
         
