@@ -1,8 +1,8 @@
-# The following is a Matrix inversion inversion project for Coursera. 
+# The following is a Matrix inversion project for Coursera. 
 # The idea is to codify a sophisticated computation so R can optimize it. 
 #
 # The following is the text of the assignment:
-#
+#"                                                   
 # Matrix inversion is usually a costly computation and their may be some benefit to 
 # caching the inverse of a matrix rather than compute it repeatedly (there are also 
 # alternatives to matrix inversion that we will not discuss here). Your assignment is to 
@@ -17,14 +17,16 @@
 #
 # Computing the inverse of a square matrix can be done with the solve function in R. For 
 # example, if X is a square invertible matrix, then solve(X) returns its inverse.
-#
-# makeCacheMatrix creates a list containing a function to 
-# 1. set the value of the matrix 
+#"
+# Copying some of the lanuage from the example given the following functions 
+# are in the makeCacheMatrix. THe end result is a list containing function.
+# 
+# 1. set - set the value of the matrix. indicator <- NULL
 # 2. get the value of the matrix 
 # 3. set the value of inverse of the matrix 
 # 4. get the value of inverse of the matrix 
 makeCacheMatrix <- function(x = matrix()) {
-
+ 
     inv <- NULL 
     set <- function(y) { 
         x <<- y 
@@ -64,7 +66,7 @@ cacheSolve <- function(x, ...) {
 
  
 # This function assumes that the matrix is always invertible. 
-cacheSolve <- function(x, ...) { 
+
     inv <- x$getinverse() 
     if(!is.null(inv)) { 
         message("getting cached data.") 
@@ -90,4 +92,3 @@ cacheSolve <- function(x, ...) {
 ##}
 
         
-}
